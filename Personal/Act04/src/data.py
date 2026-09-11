@@ -1,4 +1,4 @@
-"""Carga de las barras congeladas por scripts/download_data.py."""
+
 from pathlib import Path
 
 import pandas as pd
@@ -7,13 +7,6 @@ DATA_DIR = Path(__file__).parent.parent / "data"
 
 
 def load_ohlcv(ticker: str = "BTC-USD", interval: str = "1d") -> pd.DataFrame:
-    """
-    Barras OHLCV del CSV congelado, con las columnas en minusculas.
-
-    Las funciones de indicators.py piden df["close"], df["high"], etc., pero
-    yfinance guarda "Close", "High"... asi que la normalizacion va aqui y no
-    repartida por todo el notebook.
-    """
     path = DATA_DIR / f"{ticker}_{interval}.csv"
     if not path.exists():
         raise FileNotFoundError(

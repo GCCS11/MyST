@@ -1,10 +1,4 @@
-"""
-Descarga y congela las barras diarias de BTC-USD que usa la Act 04.
 
-Se corre una sola vez: el CSV queda en data/ y todo lo demas (notebook,
-indicadores, figuras) lee de ahi. Asi los numeros del README no cambian
-cada vez que yfinance trae un dia mas.
-"""
 from pathlib import Path
 
 import pandas as pd
@@ -17,12 +11,10 @@ DATA_DIR = Path(__file__).parent.parent / "data"
 
 
 def download(ticker: str, start: str, interval: str):
-    """Barras OHLCV de yfinance, con las columnas ya aplanadas."""
     df = yf.download(ticker, start=start, interval=interval,
                      progress=False, auto_adjust=True)
     if df.empty:
         raise ValueError(f"{ticker}: sin barras desde {start}")
-    # yfinance regresa un MultiIndex (campo, ticker) aun para un solo ticker.
     if isinstance(df.columns, pd.MultiIndex):
         df.columns = df.columns.get_level_values(0)
     return df[["Open", "High", "Low", "Close", "Volume"]]
