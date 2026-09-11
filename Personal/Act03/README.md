@@ -24,7 +24,7 @@ Distancia optima de cotizacion: **d\* = 5.43**, con **pi\* = 1.463**
 
 ## Como correrlo
 ```bash
-python3 -m venv venv
+python3 -m venv venv 
 source venv/bin/activate
 pip install -r requirements.txt
 python3 copeland_galai.py
