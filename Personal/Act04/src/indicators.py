@@ -109,3 +109,29 @@ def nan_report(df: pd.DataFrame) -> pd.DataFrame:
         if s.first_valid_index() is not None else int(s.isna().sum())
     )
     return rep
+
+
+def centered_ma(df: pd.DataFrame, window: int = 20) -> pd.Series:
+    return df["close"].rolling(window, center=True).mean()
+
+
+def zscore_muestra(df: pd.DataFrame) -> pd.Series:
+    return (df["close"] - df["close"].mean()) / df["close"].std()
+
+
+def check_lookahead(df: pd.DataFrame, fn, ts) -> pd.DataFrame:
+    completa = fn(df)
+    filas = []
+    for t in ts:
+        parcial = fn(df.iloc[:t + 1])
+        a, b = completa.iloc[t], parcial.iloc[-1]
+        dif = abs(a - b)
+        filas.append({
+            "t": t,
+            "fecha": df.index[t].date(),
+            "completa": a,
+            "hasta_t": b,
+            "dif_abs": dif,
+            "dif_rel_%": 100 * dif / abs(a) if a != 0 else np.nan,
+        })
+    return pd.DataFrame(filas).set_index("t")
